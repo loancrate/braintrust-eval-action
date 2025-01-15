@@ -59,7 +59,7 @@ async function main(): Promise<void> {
     //await upsertComment(`${TITLE}Evals failed: ${error}`);
     throw error;
   } finally {
-    await currentUpdate;
+    // await currentUpdate;
   }
 }
 
