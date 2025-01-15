@@ -50,7 +50,10 @@ async function main(): Promise<void> {
   await upsertComment(`${TITLE}Evals in progress... ⌛`);
 
   try {
-    await runEval(args.data, onSummary);
+    await runEval(args.data, ()=>{
+
+      return;
+    });
     //await runUpdateComments(true);
   } catch (error) {
     core.error(`Eval command failed: ${error}`);
