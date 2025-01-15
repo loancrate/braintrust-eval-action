@@ -50,8 +50,7 @@ async function main(): Promise<void> {
   await upsertComment(`${TITLE}Evals in progress... ⌛`);
 
   try {
-    await runEval(args.data, ()=>{
-
+    await runEval(args.data, () => {
       return;
     });
     //await runUpdateComments(true);
