@@ -49,33 +49,32 @@ async function runCommand(command: string, onSummary: OnSummaryFn) {
     const process = execSync(command);
 
     process.stdout?.on("data", (text: string) => {
-      onSummary(
-        text
-          .split("\n")
-          .map(line => line.trim())
-          .filter(line => line.length > 0)
-          .flatMap(line => {
-            try {
-              const parsedLine = JSON.parse(line);
+      const parsedResult = text
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .flatMap(line => {
+          try {
+            const parsedLine = JSON.parse(line);
 
-              if (experimentSummarySchema.safeParse(parsedLine).success) {
-                console.log("Experiment summary", parsedLine);
-                return [parsedLine];
-              }
-
-              if (experimentFailureSchema.safeParse(parsedLine).success) {
-                console.log("Experiment failure", parsedLine);
-                return [parsedLine];
-              }
-              console.log("Unknown", parsedLine);
-              return [];
-              core.info(line);
-            } catch (e) {
-              core.error(`Failed to parse jsonl data: ${e}`);
-              return [];
+            if (experimentSummarySchema.safeParse(parsedLine).success) {
+              return [parsedLine];
             }
-          }),
-      );
+
+            if (experimentFailureSchema.safeParse(parsedLine).success) {
+              return [parsedLine];
+            }
+            core.info(line);
+            return [];
+          } catch (e) {
+            core.error(`Failed to parse jsonl data: ${e}`);
+            return [];
+          }
+        });
+
+      if (parsedResult.length > 0) {
+        onSummary(parsedResult);
+      }
     });
 
     process.stderr?.on("data", data => {
