@@ -67,6 +67,8 @@ async function runCommand(command: string, onSummary: OnSummaryFn) {
                 console.log("Experiment failure", parsedLine);
                 return [parsedLine];
               }
+              console.log("Unknown", parsedLine);
+              return [];
               core.info(line);
             } catch (e) {
               core.error(`Failed to parse jsonl data: ${e}`);
