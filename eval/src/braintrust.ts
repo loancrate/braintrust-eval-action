@@ -59,10 +59,12 @@ async function runCommand(command: string, onSummary: OnSummaryFn) {
               const parsedLine = JSON.parse(line);
 
               if (experimentSummarySchema.safeParse(parsedLine).success) {
+                console.log("Experiment summary", parsedLine);
                 return [parsedLine];
               }
 
               if (experimentFailureSchema.safeParse(parsedLine).success) {
+                console.log("Experiment failure", parsedLine);
                 return [parsedLine];
               }
               core.info(line);
